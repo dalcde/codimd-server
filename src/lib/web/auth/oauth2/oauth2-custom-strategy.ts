@@ -37,12 +37,14 @@ function parseProfile (data): Partial<PassportProfile> {
   } catch (e) {
     logger.debug('\'id_token[%s]\' is undefined. Setting \'emails\' to [].\n%s', config.oauth2.userProfileEmailAttr, e.message)
   }
+  const groups: string[] = data.groups === undefined ? [] : data.groups
 
   return {
     id: username,
     username: username,
     displayName: displayName,
-    emails: emails
+    emails: emails,
+    groups: groups
   }
 }
 

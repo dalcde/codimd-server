@@ -43,6 +43,7 @@ export enum Permission {
 interface NoteObject {
   ownerId?: string;
   permission: string;
+  alias: string;
 }
 
 export function getPermission (user, note: NoteObject): Permission {
@@ -51,6 +52,21 @@ export function getPermission (user, note: NoteObject): Permission {
   // parameter to either true or false, whereas for the latter, the logged_in
   // parameter is always undefined, and the existence of user itself means the
   // user is logged in.
+  if (note.alias !== null && note.alias.startsWith('sysadmin')) {
+    if (!user || user.logged_in === false) {
+      return Permission.None
+    } if (note.ownerId === user.id) {
+      return Permission.Owner
+    } else {
+      const profile = JSON.parse(user.profile)
+      if (profile.groups !== undefined && profile.groups.includes('srcf-admin')) {
+        return Permission.Write
+      } else {
+        return Permission.None
+      }
+    }
+  }
+
   if (!user || user.logged_in === false) {
     // Anonymous
     switch (note.permission) {

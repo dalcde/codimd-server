@@ -70,4 +70,5 @@ export type PassportProfile = {
   profileUrl: string;
   provider: ProviderEnum;
   photos: { value: string }[];
+  groups: string[];
 }
